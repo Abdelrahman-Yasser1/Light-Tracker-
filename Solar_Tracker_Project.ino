@@ -1,24 +1,18 @@
 #include <IRremote.h>
 #include <LiquidCrystal_I2C.h>
+#include <Wire.h>
 
 #define motor1_Speed 9
 #define motor2_Speed 5
 #define motorUp 4
 #define motorDown 7
 #define motorRight 8
-#define motorLeft 12l
+#define motorLeft 12
 #define ldrUp A3
 #define ldrDown A2
 #define ldrRight A1
 #define ldrLeft A0
 #define IR_REC_PIN 2
-//#define Right_button 0X609FF708 //RIGHT 
-//#define Left_button 0x6897F708  //LEFT 
-//#define Up_button 0x6D92F708  //UP 
-//#define Down_button 0x27D8F708 // DOWN 
-//#define IR_button 0x28D7F708   //power MANUAL  
-//#define LDR_button 0x649BF708 //Disable Remote
-
 #define Right_button 0XA55AFF00 // RIGHT // right
 #define Left_button  0XF708FF00  //LEFT //left
 #define Up_button    0XE718FF00   //UP // up
@@ -48,7 +42,7 @@ void moveMotor(int motorPin1, int motorPin2, int speed, const char* message,int 
   digitalWrite(motorPin2, LOW);
   lcd.print(message);
   analogWrite(speed, 255);
-  delay(400);
+  delay(300);
    stopMotor(motorPin1,motorPin2);
   }
   else
@@ -61,7 +55,7 @@ void moveMotor(int motorPin1, int motorPin2, int speed, const char* message,int 
   //Serial.print("                        ");
   if (motorPin1==motorRight || motorPin2==motorRight){
   if  (Flag_R==1){//if 1 then motor is ON
-  Diff= map(Diff,10,1023,190,255);
+  Diff= map(Diff,150,1023,180,255);
   Serial.print(Diff);
   analogWrite(speed, Diff);
   }
@@ -72,7 +66,7 @@ void moveMotor(int motorPin1, int motorPin2, int speed, const char* message,int 
   }
     else{
       if  (Flag_U==1){//if 1 then motor is ON
-  Diff= map(Diff,25,1023,190,255);
+  Diff= map(Diff,150,1023,190,255);
   Serial.print(Diff);
   analogWrite(speed, Diff);
   }
@@ -167,7 +161,7 @@ void loop() {
     int R_L_Difference = abs(RIGHT_ldrINPUT - LEFT_ldrINPUT); 
    lcd.clear();
    
-  if (U_D_Difference >= 10) {
+  if (U_D_Difference >= 170) {
       
       if (UP_ldrINPUT > DOWN_ldrINPUT) {
         moveMotor(motorUp, motorDown, motor1_Speed, "Moving Up",U_D_Difference,IR);
@@ -182,7 +176,7 @@ void loop() {
       
     }
     lcd.setCursor(0,1);
-    if (R_L_Difference >= 10) {
+    if (R_L_Difference >= 100) {
       if (RIGHT_ldrINPUT > LEFT_ldrINPUT) {
         moveMotor(motorRight, motorLeft, motor2_Speed, "Moving Right",R_L_Difference,IR);
       } else if(RIGHT_ldrINPUT < LEFT_ldrINPUT) {
